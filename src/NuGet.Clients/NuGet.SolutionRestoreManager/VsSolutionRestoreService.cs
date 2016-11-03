@@ -97,7 +97,7 @@ namespace NuGet.SolutionRestoreManager
 
                 var dgSpec = ToDependencyGraphSpec(projectNames, projectRestoreInfo);
 #if DEBUG
-                DumpProjectRestoreInfo(dgSpec);
+                DumpProjectRestoreInfo(projectUniqueName, dgSpec);
 #endif
                 _projectSystemCache.AddProjectRestoreInfo(projectNames, dgSpec);
 
@@ -115,11 +115,13 @@ namespace NuGet.SolutionRestoreManager
             }
         }
 
-        private void DumpProjectRestoreInfo(DependencyGraphSpec projectRestoreInfo)
+#if DEBUG
+        private void DumpProjectRestoreInfo(string projectUniqueName, DependencyGraphSpec projectRestoreInfo)
         {
             try
             {
-                var outputPath = projectRestoreInfo.Projects.First().RestoreMetadata.OutputPath;
+                var packageSpec = projectRestoreInfo.GetProjectSpec(projectUniqueName);
+                var outputPath = packageSpec.RestoreMetadata.OutputPath;
                 if (!Directory.Exists(outputPath))
                 {
                     Directory.CreateDirectory(outputPath);
@@ -133,13 +135,14 @@ namespace NuGet.SolutionRestoreManager
                 _logger.LogError(e.ToString());
             }
         }
+#endif
 
         private static DependencyGraphSpec ToDependencyGraphSpec(ProjectNames projectNames, IVsProjectRestoreInfo projectRestoreInfo)
         {
             var dgSpec = new DependencyGraphSpec();
 
             var packageSpec = ToPackageSpec(projectNames, projectRestoreInfo);
-            dgSpec.AddRestore(packageSpec.RestoreMetadata.ProjectName);
+            dgSpec.AddRestore(packageSpec.RestoreMetadata.ProjectUniqueName);
             dgSpec.AddProject(packageSpec);
 
             if (projectRestoreInfo.ToolReferences != null)
@@ -151,7 +154,7 @@ namespace NuGet.SolutionRestoreManager
                     .ToList()
                     .ForEach(ts =>
                     {
-                        dgSpec.AddRestore(ts.RestoreMetadata.ProjectName);
+                        dgSpec.AddRestore(ts.RestoreMetadata.ProjectUniqueName);
                         dgSpec.AddProject(ts);
                     });
             }

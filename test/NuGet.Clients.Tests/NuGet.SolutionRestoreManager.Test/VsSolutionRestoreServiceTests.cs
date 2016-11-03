@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
+using NuGet.Commands;
 using NuGet.Frameworks;
 using NuGet.LibraryModel;
 using NuGet.PackageManagement.VisualStudio;
@@ -117,9 +118,11 @@ namespace NuGet.SolutionRestoreManager.Test
 
             Assert.True(result, "Project restore nomination should succeed.");
             Assert.NotNull(actualRestoreSpec);
-            Assert.NotNull(actualRestoreSpec.GetProjectSpec(projectFullPath));
+            SpecValidationUtility.ValidateDependencySpec(actualRestoreSpec);
 
+            Assert.NotNull(actualRestoreSpec.GetProjectSpec(projectFullPath));
             var actualProjectSpec = actualRestoreSpec.GetProjectSpec(projectFullPath);
+
             var actualMetadata = actualProjectSpec.RestoreMetadata;
             Assert.Equal(projectFullPath, actualMetadata.ProjectPath);
             Assert.Equal(projectName, actualMetadata.ProjectName);
@@ -178,8 +181,9 @@ namespace NuGet.SolutionRestoreManager.Test
 
             Assert.True(result, "Project restore nomination should succeed.");
             Assert.NotNull(actualRestoreSpec);
-            Assert.NotNull(actualRestoreSpec.GetProjectSpec(projectFullPath));
+            SpecValidationUtility.ValidateDependencySpec(actualRestoreSpec);
 
+            Assert.NotNull(actualRestoreSpec.GetProjectSpec(projectFullPath));
             var actualProjectSpec = actualRestoreSpec.GetProjectSpec(projectFullPath);
 
             var actualToolSpec = actualRestoreSpec
