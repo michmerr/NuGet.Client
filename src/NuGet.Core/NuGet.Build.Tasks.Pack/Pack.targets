@@ -132,10 +132,7 @@ Copyright (c) .NET Foundation. All rights reserved.
       Projects="$(MSBuildProjectFullPath)"
       Targets="_GetProjectToProjectReferences"
       Properties="TargetFramework=%(_TargetFrameworks.Identity);
-              %(_MSBuildProjectReferenceExistent.SetConfiguration);
-              %(_MSBuildProjectReferenceExistent.SetPlatform);
-              BuildProjectReferences=false;"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+                  BuildProjectReferences=false;">
 
       <Output
           TaskParameter="TargetOutputs"
@@ -147,10 +144,7 @@ Copyright (c) .NET Foundation. All rights reserved.
       Projects="$(MSBuildProjectFullPath)"
       Targets="BuiltProjectOutputGroup;DocumentationProjectOutputGroup"
       Properties="TargetFramework=%(_TargetFrameworks.Identity);
-              %(_MSBuildProjectReferenceExistent.SetConfiguration);
-              %(_MSBuildProjectReferenceExistent.SetPlatform);
-              BuildProjectReferences=false;"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+                  BuildProjectReferences=false;">
 
       <Output
           TaskParameter="TargetOutputs"
@@ -162,10 +156,7 @@ Copyright (c) .NET Foundation. All rights reserved.
       Projects="$(MSBuildProjectFullPath)"
       Targets="DebugSymbolsProjectOutputGroup"
       Properties="TargetFramework=%(_TargetFrameworks.Identity);
-              %(_MSBuildProjectReferenceExistent.SetConfiguration);
-              %(_MSBuildProjectReferenceExistent.SetPlatform);
-              BuildProjectReferences=false;"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+                  BuildProjectReferences=false;">
 
       <Output
           TaskParameter="TargetOutputs"
@@ -177,10 +168,7 @@ Copyright (c) .NET Foundation. All rights reserved.
       Projects="$(MSBuildProjectFullPath)"
       Targets="SourceFilesProjectOutputGroup"
       Properties="TargetFramework=%(_TargetFrameworks.Identity);
-              %(_MSBuildProjectReferenceExistent.SetConfiguration);
-              %(_MSBuildProjectReferenceExistent.SetPlatform);
-              BuildProjectReferences=false;"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+                  BuildProjectReferences=false;">
 
       <Output
           TaskParameter="TargetOutputs"
@@ -191,10 +179,7 @@ Copyright (c) .NET Foundation. All rights reserved.
       Projects="$(MSBuildProjectFullPath)"
       Targets="_GetPackageReferences"
       Properties="TargetFramework=%(_TargetFrameworks.Identity);
-              %(_MSBuildProjectReferenceExistent.SetConfiguration);
-              %(_MSBuildProjectReferenceExistent.SetPlatform);
-              BuildProjectReferences=false;"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+                  BuildProjectReferences=false;">
 
       <Output
           TaskParameter="TargetOutputs"
@@ -206,12 +191,12 @@ Copyright (c) .NET Foundation. All rights reserved.
           Returns="@(_ProjectReferences)">
     <ItemGroup>
       <_ProjectReferences Include="$(MSBuildProjectFullPath)">
+        <_ParentTargetFramework>$(_ParentTargetFramework)</_ParentTargetFramework>
         <PackageId>$(PackageId)</PackageId>
         <PackageVersion>$(PackageVersion)</PackageVersion>
         <IncludeAssets>$(IncludeAssets)</IncludeAssets>
         <ExcludeAssets>$(ExcludeAssets)</ExcludeAssets>
         <PrivateAssets>$(PrivateAssets)</PrivateAssets>
-        <TargetFramework>$(TargetFramework)</TargetFramework>
         <Type>Package</Type>
       </_ProjectReferences>
     </ItemGroup>
@@ -224,7 +209,7 @@ Copyright (c) .NET Foundation. All rights reserved.
     ============================================================
   -->
   <Target Name="_GetProjectToProjectReferences"
-      Condition="$(TargetFramework) != ''"
+      Condition="'$(TargetFramework)' != ''"
       DependsOnTargets="ResolveProjectReferences"
       Returns="@(_ProjectReferences)">
 
@@ -237,15 +222,12 @@ Copyright (c) .NET Foundation. All rights reserved.
     <MSBuild
       Projects="@(ValidProjectInputForPackGraph)"
       Targets="_AddMetadataToProjectReference"
-      Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration);
-              %(_MSBuildProjectReferenceExistent.SetPlatform);
-              CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileFullPath);
+      Properties="CustomAfterMicrosoftCommonTargets=$(MSBuildThisFileFullPath);
               BuildProjectReferences=false;
-              TargetFramework=$(TargetFramework);
+              _ParentTargetFramework=$(TargetFramework);
               IncludeAssets=%(ValidProjectInputForPackGraph.IncludeAssets);
               ExcludeAssets=%(ValidProjectInputForPackGraph.ExcludeAssets);
-              PrivateAssets=%(ValidProjectInputForPackGraph.PrivateAssets)"
-      RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+              PrivateAssets=%(ValidProjectInputForPackGraph.PrivateAssets)">
 
       <Output
           TaskParameter="TargetOutputs"
