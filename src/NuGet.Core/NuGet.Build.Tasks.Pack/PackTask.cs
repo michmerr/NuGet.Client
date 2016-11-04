@@ -37,7 +37,7 @@ namespace NuGet.Build.Tasks.Pack
         public string[] Tags { get; set; }
         public string ReleaseNotes { get; set; }
         public string Configuration { get; set; }
-        public ITaskItem[] TargetPathsToAssemblies { get; set; }
+        public string[] TargetPathsToAssemblies { get; set; }
         public string[] TargetPathsToSymbols { get; set; }
         public string AssemblyName { get; set; }
         public string PackageOutputPath { get; set; }
@@ -123,7 +123,6 @@ namespace NuGet.Build.Tasks.Pack
             }
 
             return TargetPathsToAssemblies
-                .Select(item => item.GetMetadata("FinalOutputPath"))
                 .Where(path => !string.IsNullOrEmpty(path))
                 .Distinct()
                 .ToArray();
