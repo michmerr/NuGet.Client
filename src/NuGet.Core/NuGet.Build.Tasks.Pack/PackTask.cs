@@ -61,12 +61,6 @@ namespace NuGet.Build.Tasks.Pack
 
         public override bool Execute()
         {
-            System.Console.WriteLine($"Process ID: {System.Diagnostics.Process.GetCurrentProcess().Id}");
-            while (!System.Diagnostics.Debugger.IsAttached)
-            {
-                System.Threading.Thread.Sleep(100);
-            }
-
             var packArgs = GetPackArgs();
             var packageBuilder = GetPackageBuilder(packArgs);
             var contentFiles = ProcessContentToIncludeInPackage(packArgs.CurrentDirectory);
