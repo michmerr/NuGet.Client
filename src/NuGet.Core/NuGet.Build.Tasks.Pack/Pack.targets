@@ -20,7 +20,6 @@ Copyright (c) .NET Foundation. All rights reserved.
 
   <PropertyGroup>
     <PackageId Condition=" '$(PackageId)' == '' ">$(AssemblyName)</PackageId>
-    <PackageVersion Condition=" '$(PackageVersion)' == '' ">$(Version)</PackageVersion>
     <IncludeContentInPack Condition="'$(IncludeContentInPack)'==''">true</IncludeContentInPack>
     <GenerateNuspecDependsOn>_LoadPackInputItems; _WalkEachTargetPerFramework; _GetPackageFiles</GenerateNuspecDependsOn>
     <Description Condition="'$(Description)'==''">Package Description</Description>
@@ -66,7 +65,8 @@ Copyright (c) .NET Foundation. All rights reserved.
     <PropertyGroup Condition="$(ContinuePackingAfterGeneratingNuspec) == '' ">
       <ContinuePackingAfterGeneratingNuspec>false</ContinuePackingAfterGeneratingNuspec>
     </PropertyGroup>
-    <PropertyGroup>
+    <PropertyGroup>      
+      <PackageVersion Condition=" '$(PackageVersion)' == '' ">$(Version)</PackageVersion>
       <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(OutputPath)</PackageOutputPath>
     </PropertyGroup>
     <!-- Call Pack -->
